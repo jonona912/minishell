@@ -6,7 +6,7 @@
 /*   By: opopov <opopov@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 12:16:52 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/04/08 18:40:24 by opopov           ###   ########.fr       */
+/*   Updated: 2025/04/08 19:20:51 by opopov           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	ft_append_char(char *str, char c)
 	return (1);
 }
 
-void	initialize_tokenize_struct(t_tokenize_struct *vars, char *line) // should return if fail or exit?
+void	initialize_tokenize_struct(t_tokenize_struct *vars, char *line)
 {
 	int	line_len;
 
@@ -45,4 +45,3 @@ void	initialize_tokenize_struct(t_tokenize_struct *vars, char *line) // should r
 	vars->is_d_quote = 0;
 	vars->is_parenthesis = 0;
 }
-

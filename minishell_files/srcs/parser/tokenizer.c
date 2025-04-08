@@ -6,7 +6,7 @@
 /*   By: opopov <opopov@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 21:43:18 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/04/08 18:38:17 by opopov           ###   ########.fr       */
+/*   Updated: 2025/04/08 19:39:57 by opopov           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,12 @@ int	process_redirection(t_tokenize_struct *vars, t_token_lst **token_lst, char *
 
 int	handle_redirection(t_tokenize_struct *vars, t_token_lst **token_lst, char *line, int *i)
 {
-	if (line[*i] == '<')
-		return (process_redirection(vars, token_lst, line, i, TOKEN_REDIRECTION_IN , 1));
 	if (line[*i] == '>' && line[*i + 1] == '>')
 		return (process_redirection(vars, token_lst, line, i, TOKEN_APPEND, 2));
+	if (line[*i] == '<' && line[*i + 1] == '<')
+		return (process_redirection(vars, token_lst, line, i, TOKEN_HEREDOC, 2));
+	if (line[*i] == '<')
+		return (process_redirection(vars, token_lst, line, i, TOKEN_REDIRECTION_IN , 1));
 	if (line[*i] == '>')
 		return (process_redirection(vars, token_lst, line, i, TOKEN_REDIRECTION_OUT , 1));
 	if (line[*i] == '|')
@@ -80,7 +82,9 @@ int	handle_whitespace(t_tokenize_struct *vars, t_token_lst **token_lst, char *li
 			(*i)++;
 		if (vars->current_token[0] == '\0')
 			return (1);
-		temp = ft_strdup(vars->current_token); // check if not NULL?
+		temp = ft_strdup(vars->current_token);
+		if (!temp)
+			exit(1);
 		token_add_node_back(token_lst, token_new_node(0, temp));
 		vars->current_token[0] = '\0';
 		return (1);

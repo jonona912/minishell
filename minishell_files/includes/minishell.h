@@ -6,7 +6,7 @@
 /*   By: opopov <opopov@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 14:00:21 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/04/08 18:43:22 by opopov           ###   ########.fr       */
+/*   Updated: 2025/04/08 19:21:00 by opopov           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,5 @@ t_token_lst	*ft_tokenize(char *line);
 
 int	ft_isblank(int c);
 int	ft_append_char(char *str, char c);
-void	initialize_tokenize_struct(t_tokenize_struct *vars, char *line);
 
 #endif
