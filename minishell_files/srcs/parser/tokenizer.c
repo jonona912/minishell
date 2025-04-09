@@ -6,26 +6,40 @@
 /*   By: opopov <opopov@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 21:43:18 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/04/08 19:39:57 by opopov           ###   ########.fr       */
+/*   Updated: 2025/04/09 11:08:19 by opopov           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	handle_quotes(t_tokenize_struct *vars, char *line, int *i)
+int	handle_quotes(t_tokenize_struct *vars, t_token_lst **token_lst, char *line, int *i)
 {
 	if (line[*i] == '\"' && !vars->is_s_quote)
 	{
+		vars->d_counter++;
 		vars->is_d_quote = !vars->is_d_quote;
 		ft_append_char(vars->current_token, line[*i]);
 		(*i)++;
+		if(vars->d_counter % 2 == 0)
+		{
+			char *temp = ft_strdup(vars->current_token);
+			token_add_node_back(token_lst, token_new_node(0, temp));
+			vars->current_token[0] = '\0';
+		}
 		return (1);
 	}
 	if (line[*i] == '\'' && !vars->is_d_quote)
 	{
+		vars->s_counter++;
 		vars->is_s_quote = !vars->is_s_quote;
 		ft_append_char(vars->current_token, line[*i]);
 		(*i)++;
+		if(vars->s_counter % 2 == 0)
+		{
+			char *temp = ft_strdup(vars->current_token);
+			token_add_node_back(token_lst, token_new_node(0, temp));
+			vars->current_token[0] = '\0';
+		}
 		return (1);
 	}
 	if (vars->is_s_quote || vars->is_d_quote)
@@ -37,7 +51,7 @@ int	handle_quotes(t_tokenize_struct *vars, char *line, int *i)
 	return (0);
 }
 
-int	process_redirection(t_tokenize_struct *vars, t_token_lst **token_lst, char *line, int *i, t_token_type token_type, int step)
+int	process_redirection(t_tokenize_struct *vars, t_token_lst **token_lst, char *line, int *i, t_token_type token_type)
 {
 	char	*temp;
 
@@ -48,7 +62,7 @@ int	process_redirection(t_tokenize_struct *vars, t_token_lst **token_lst, char *
 		vars->current_token[0] = '\0';
 	}
 	ft_append_char(vars->current_token, line[*i]);
-	if (step == 2)
+	if ((*token_lst)->type == TOKEN_APPEND || (*token_lst)->type == TOKEN_HEREDOC)
 		ft_append_char(vars->current_token, line[*i + 1]);
 	temp = ft_strdup(vars->current_token);
 	token_add_node_back(token_lst, token_new_node(token_type, temp));
@@ -60,15 +74,15 @@ int	process_redirection(t_tokenize_struct *vars, t_token_lst **token_lst, char *
 int	handle_redirection(t_tokenize_struct *vars, t_token_lst **token_lst, char *line, int *i)
 {
 	if (line[*i] == '>' && line[*i + 1] == '>')
-		return (process_redirection(vars, token_lst, line, i, TOKEN_APPEND, 2));
+		return (process_redirection(vars, token_lst, line, i, TOKEN_APPEND));
 	if (line[*i] == '<' && line[*i + 1] == '<')
-		return (process_redirection(vars, token_lst, line, i, TOKEN_HEREDOC, 2));
+		return (process_redirection(vars, token_lst, line, i, TOKEN_HEREDOC));
 	if (line[*i] == '<')
-		return (process_redirection(vars, token_lst, line, i, TOKEN_REDIRECTION_IN , 1));
+		return (process_redirection(vars, token_lst, line, i, TOKEN_REDIRECTION_IN));
 	if (line[*i] == '>')
-		return (process_redirection(vars, token_lst, line, i, TOKEN_REDIRECTION_OUT , 1));
+		return (process_redirection(vars, token_lst, line, i, TOKEN_REDIRECTION_OUT));
 	if (line[*i] == '|')
-		return (process_redirection(vars, token_lst, line, i, TOKEN_PIPE, 1));
+		return (process_redirection(vars, token_lst, line, i, TOKEN_PIPE));
 	return (0);
 }
 
@@ -84,7 +98,7 @@ int	handle_whitespace(t_tokenize_struct *vars, t_token_lst **token_lst, char *li
 			return (1);
 		temp = ft_strdup(vars->current_token);
 		if (!temp)
-			exit(1);
+			exit(1); // update code later
 		token_add_node_back(token_lst, token_new_node(0, temp));
 		vars->current_token[0] = '\0';
 		return (1);
@@ -123,7 +137,7 @@ t_token_lst	*ft_tokenize(char *line)
 		i++;
 	while (line[i])
 	{
-		if (handle_quotes(&vars, line, &i))
+		if (handle_quotes(&vars, &token_lst, line, &i))
 			continue ;
 		if (handle_whitespace(&vars, &token_lst, line, &i))
 			continue ;

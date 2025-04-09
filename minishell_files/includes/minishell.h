@@ -6,7 +6,7 @@
 /*   By: opopov <opopov@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 14:00:21 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/04/08 19:21:00 by opopov           ###   ########.fr       */
+/*   Updated: 2025/04/09 11:07:28 by opopov           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ typedef struct s_token_lst
 // make separate lists for tokens and commands
 typedef struct s_cmd_lst
 {
-	char			*path;
-	char			**av;
+	char				*path;
+	char				**av;
 	struct s_cmd_lst	*next;
 }	t_cmd_lst;
 
@@ -81,6 +81,8 @@ typedef struct s_tokenize_struct
 	int		is_s_quote;
 	int		is_d_quote;
 	int		is_parenthesis;
+	int		s_counter;
+	int		d_counter;
 }	t_tokenize_struct;
 
 

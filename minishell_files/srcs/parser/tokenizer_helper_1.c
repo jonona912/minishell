@@ -6,7 +6,7 @@
 /*   By: opopov <opopov@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 12:16:52 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/04/08 19:20:51 by opopov           ###   ########.fr       */
+/*   Updated: 2025/04/09 10:03:31 by opopov           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,7 @@ void	initialize_tokenize_struct(t_tokenize_struct *vars, char *line)
 	vars->is_s_quote = 0;
 	vars->is_d_quote = 0;
 	vars->is_parenthesis = 0;
+	vars->type = TOKEN_WORD;
+	vars->d_counter = 0;
+	vars->s_counter = 0;
 }
